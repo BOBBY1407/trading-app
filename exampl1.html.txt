@@ -1,0 +1,30 @@
+import alpaca_trade_api as tradeapi
+
+# Replace with your own API credentials
+API_KEY = 'your_api_key'
+SECRET_KEY = 'your_secret_key'
+BASE_URL = 'https://paper-api.alpaca.markets'
+
+api = tradeapi.REST(API_KEY, SECRET_KEY, BASE_URL, api_version='v2')
+
+# Fetch account details
+account = api.get_account()
+print(f'Account balance: ${account.cash}')
+
+# Fetch market data for a stock (e.g., Apple Inc.)
+stock_symbol = 'AAPL'
+barset = api.get_barset(stock_symbol, 'day', limit=5)
+bars = barset[stock_symbol]
+
+for bar in bars:
+    print(f'Time: {bar.t}, Open: {bar.o}, High: {bar.h}, Low: {bar.l}, Close: {bar.c}, Volume: {bar.v}')
+
+# Place a market order to buy 1 share of Apple Inc.
+order = api.submit_order(
+    symbol=stock_symbol,
+    qty=1,
+    side='buy',
+    type='market',
+    time_in_force='gtc'  # Good 'til canceled
+)
+print(f'Order submitted: {order}')
